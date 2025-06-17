@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
-import { getHeroSection } from "@/lib/hero-utils";
-import { getCompanyInfo } from "@/lib/company-utils";
-import { getSeoMetadata, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
+import { getHeroSectionWithRevalidation } from "@/lib/hero-utils";
+import { getCompanyInfoWithRevalidation } from "@/lib/company-utils";
+import { getSeoMetadataWithRevalidation, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
 import { generatePageSchema } from "@/lib/schema-utils";
 import Image from "next/image";
 import { Code2, ExternalLink, Github } from "lucide-react";
@@ -11,7 +11,7 @@ import Link from "next/link";
 
 // ✅ Dynamic SEO metadata from database
 export async function generateMetadata(): Promise<Metadata> {
-  const seoData = await getSeoMetadata('/projects');
+  const seoData = await getSeoMetadataWithRevalidation('/projects');
   return generateSeoMetadata(seoData, {
     title: "Our Projects - EtherCore",
     description: "Explore our portfolio of web development and AI automation projects.",
@@ -37,8 +37,8 @@ export async function generateMetadata(): Promise<Metadata> {
 async function getData() {
   const [{ data: projects }, hero, companyInfo] = await Promise.all([
     supabase.from("portfolio").select("*").order("created_at", { ascending: false }),
-    getHeroSection('/projects'),
-    getCompanyInfo()
+    getHeroSectionWithRevalidation('/projects'),
+    getCompanyInfoWithRevalidation()
   ]);
 
   return { projects: projects || [], hero, companyInfo };

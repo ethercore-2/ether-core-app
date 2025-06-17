@@ -3,13 +3,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Phone, MessageCircle, Mail, Clock } from 'lucide-react';
 import SocialMediaLinks from './SocialMediaLinks';
-import { getCompanyInfo } from '@/lib/company-utils';
+import { getCompanyInfoWithRevalidation } from '@/lib/company-utils';
 import { supabase } from '@/lib/supabase';
 
 const Footer = async () => {
   // Fetch data from database
   const [companyInfo, { data: services }] = await Promise.all([
-    getCompanyInfo(),
+    getCompanyInfoWithRevalidation(),
     supabase.from('services').select('name, slug').eq('is_active', true).limit(6).order('display_order', { ascending: true })
   ]);
 
@@ -23,7 +23,7 @@ const Footer = async () => {
     { name: 'Projects', href: '/projects' }
   ];
 
-  const footerServices = services?.map(service => ({
+  const footerServices = services?.map((service: any) => ({
     name: service.name,
     href: `/services/${service.slug || service.name.toLowerCase().replace(/\s+/g, '-')}`
   })) || [

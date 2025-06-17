@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
-import { getHeroSection } from "@/lib/hero-utils";
-import { getCompanyInfo } from "@/lib/company-utils";
-import { getSeoMetadata, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
+import { getHeroSectionWithRevalidation } from "@/lib/hero-utils";
+import { getCompanyInfoWithRevalidation } from "@/lib/company-utils";
+import { getSeoMetadataWithRevalidation, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
 import { generatePageSchema } from "@/lib/schema-utils";
 import { Brain, Code2, Search, Palette, ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { Metadata } from "next";
 
 // ✅ Dynamic SEO metadata from database
 export async function generateMetadata(): Promise<Metadata> {
-  const seoData = await getSeoMetadata('/services');
+  const seoData = await getSeoMetadataWithRevalidation('/services');
   return generateSeoMetadata(seoData, {
     title: "Our Services - EtherCore",
     description: "Discover our professional services in web development, AI automation, and SEO optimization.",
@@ -39,8 +39,8 @@ async function getServices() {
 async function getData() {
   const [services, hero, companyInfo] = await Promise.all([
     getServices(),
-    getHeroSection('/services'),
-    getCompanyInfo()
+    getHeroSectionWithRevalidation('/services'),
+    getCompanyInfoWithRevalidation()
   ]);
 
   return { services, hero, companyInfo };

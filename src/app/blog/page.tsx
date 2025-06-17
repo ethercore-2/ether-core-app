@@ -1,14 +1,14 @@
 import { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
-import { getHeroSection } from "@/lib/hero-utils";
-import { getCompanyInfo } from "@/lib/company-utils";
-import { getSeoMetadata, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
+import { getHeroSectionWithRevalidation } from "@/lib/hero-utils";
+import { getCompanyInfoWithRevalidation } from "@/lib/company-utils";
+import { getSeoMetadataWithRevalidation, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
 import { generatePageSchema } from "@/lib/schema-utils";
 import BlogClient from "@/components/BlogClient";
 
 // ✅ Dynamic SEO metadata from database
 export async function generateMetadata(): Promise<Metadata> {
-  const seoData = await getSeoMetadata('/blog');
+  const seoData = await getSeoMetadataWithRevalidation('/blog');
   return generateSeoMetadata(seoData, {
     title: "Blog - Insights & Updates",
     description: "Read the latest articles and industry trends from the EtherCore team.",
@@ -34,8 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
 async function getData() {
   const [{ data: blogs }, hero, companyInfo] = await Promise.all([
     supabase.from("blogs").select("*").order("published_at", { ascending: false }),
-    getHeroSection('/blog'),
-    getCompanyInfo()
+    getHeroSectionWithRevalidation('/blog'),
+    getCompanyInfoWithRevalidation()
   ]);
 
   return { blogs: blogs || [], hero, companyInfo };

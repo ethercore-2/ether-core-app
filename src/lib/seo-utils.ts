@@ -14,6 +14,22 @@ export async function getSeoMetadata(pageRoute: string): Promise<SeoMetadata | n
   return seo as SeoMetadata | null;
 }
 
+// Fetch SEO metadata with cache revalidation
+export async function getSeoMetadataWithRevalidation(pageRoute: string): Promise<SeoMetadata | null> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/seo_metadata?page_route=eq.${pageRoute}&is_active=eq.true&select=*`, {
+    headers: {
+      'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}`,
+    },
+    next: { revalidate: 60 } // Revalidate every 60 seconds
+  });
+
+  if (!res.ok) return null;
+  
+  const data = await res.json();
+  return data[0] as SeoMetadata | null;
+}
+
 // Generate Next.js metadata object from database SEO data
 export function generateMetadata(seoData?: SeoMetadata | null, fallback?: Partial<Metadata>): Metadata {
   if (!seoData) {

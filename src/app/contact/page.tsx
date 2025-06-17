@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { getHeroSection } from "@/lib/hero-utils";
-import { getCompanyInfo } from "@/lib/company-utils";
-import { getSeoMetadata, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
+import { getHeroSectionWithRevalidation } from "@/lib/hero-utils";
+import { getCompanyInfoWithRevalidation } from "@/lib/company-utils";
+import { getSeoMetadataWithRevalidation, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
 import { generatePageSchema } from "@/lib/schema-utils";
 import ContactForm from "@/components/ContactForm";
 import GridBackground from "@/components/GridBackground";
@@ -9,7 +9,7 @@ import { Phone, Clock, Mail, MessageSquare } from "lucide-react";
 
 // ✅ Dynamic SEO metadata from database
 export async function generateMetadata(): Promise<Metadata> {
-  const seoData = await getSeoMetadata('/contact');
+  const seoData = await getSeoMetadataWithRevalidation('/contact');
   return generateSeoMetadata(seoData, {
     title: "Contact Us - EtherCore",
     description: "Get in touch with us today and take the first step towards transforming your online presence.",
@@ -34,8 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
 // ✅ This remains a **Server Component**
 export default async function ContactPage() {
   const [hero, companyInfo] = await Promise.all([
-    getHeroSection('/contact'),
-    getCompanyInfo()
+    getHeroSectionWithRevalidation('/contact'),
+    getCompanyInfoWithRevalidation()
   ]);
   
   // Generate schema markup for contact page

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { supabase } from '@/lib/supabase';
-import { getHeroSection } from '@/lib/hero-utils';
-import { getCompanyInfo } from '@/lib/company-utils';
-import { getSeoMetadata, generateMetadata as generateSeoMetadata } from '@/lib/seo-utils';
+import { getHeroSectionWithRevalidation } from '@/lib/hero-utils';
+import { getCompanyInfoWithRevalidation } from '@/lib/company-utils';
+import { getSeoMetadataWithRevalidation, generateMetadata as generateSeoMetadata } from '@/lib/seo-utils';
 import { generatePageSchema } from '@/lib/schema-utils';
 import TechStack from '@/components/TechStack';
 import GridBackground from '@/components/GridBackground';
@@ -18,7 +18,7 @@ import { Metadata } from "next";
 
 // ✅ Dynamic SEO metadata from database
 export async function generateMetadata(): Promise<Metadata> {
-  const seoData = await getSeoMetadata('/');
+  const seoData = await getSeoMetadataWithRevalidation('/');
   return generateSeoMetadata(seoData, {
     title: "EtherCore - Affordable Digital Solutions",
     description: "Transform your business with our web development, AI automation, and SEO services.",
@@ -40,8 +40,8 @@ async function getData() {
     supabase.from('testimonials').select('*').order('created_at', { ascending: false }),
     supabase.from('portfolio').select('*').order('created_at', { ascending: false }),
     supabase.from('blogs').select('*').order('published_at', { ascending: false }).limit(3),
-    getHeroSection('/'),
-    getCompanyInfo()
+    getHeroSectionWithRevalidation('/'),
+    getCompanyInfoWithRevalidation()
   ]);
 
   return {

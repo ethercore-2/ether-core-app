@@ -47,6 +47,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* ✅ LinkedIn Static OG Tags - Required for Featured Section */}
+        <meta property="og:title" content="EtherCore - Custom Web Development & AI Automations" />
+        <meta property="og:description" content="Co-founded web development studio delivering full-stack websites, AI-powered automations, and digital solutions for businesses looking to scale online." />
+        <meta property="og:url" content="https://www.ether-core.com" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="EtherCore" />
+        <meta property="og:image" content="https://www.ether-core.com/android-chrome-512x512.png" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:alt" content="EtherCore - Custom Web Development & AI Automations" />
+        
         {/* ✅ External CSS */}
         <link
           rel="stylesheet"
