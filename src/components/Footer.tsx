@@ -23,7 +23,7 @@ const Footer = async () => {
     { name: 'Projects', href: '/projects' }
   ];
 
-  const footerServices = services?.map((service: any) => ({
+  const footerServices = services?.map((service: { name: string; slug?: string }) => ({
     name: service.name,
     href: `/services/${service.slug || service.name.toLowerCase().replace(/\s+/g, '-')}`
   })) || [
