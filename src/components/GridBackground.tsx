@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 export default function GridBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,9 +14,9 @@ export default function GridBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size with device pixel ratio
+    // Set canvas size with device pixel ratio (optimized)
     const resizeCanvas = () => {
-      const scale = window.devicePixelRatio || 1;
+      const scale = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2x for performance
       canvas.width = window.innerWidth * scale;
       canvas.height = window.innerHeight * scale;
       ctx.scale(scale, scale);
@@ -25,17 +26,21 @@ export default function GridBackground() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Track mouse movement
+    // Track mouse movement (slightly throttled but responsive)
+    let mouseTimeout: NodeJS.Timeout;
     const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = {
-        x: e.clientX,
-        y: e.clientY
-      };
+      clearTimeout(mouseTimeout);
+      mouseTimeout = setTimeout(() => {
+        mouseRef.current = {
+          x: e.clientX,
+          y: e.clientY
+        };
+      }, 8); // Faster than before for better responsiveness
     };
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Grid properties
-    const GRID_SIZE = 40;
+    // Grid properties - RESTORED ORIGINAL VALUES
+    const GRID_SIZE = 40; // Back to original
     let time = 0;
     const particles: Array<{
       x: number;
@@ -46,21 +51,21 @@ export default function GridBackground() {
       life: number;
     }> = [];
 
-    // Create floating particles
+    // Create floating particles - RESTORED
     const createParticle = () => {
-      if (particles.length < 50) {  // Limit number of particles
+      if (particles.length < 50) {  // Back to original count
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 2 + 1,
-          speedX: (Math.random() - 0.5) * 0.5,
+          size: Math.random() * 2 + 1, // Original size
+          speedX: (Math.random() - 0.5) * 0.5, // Original speed
           speedY: (Math.random() - 0.5) * 0.5,
           life: 1
         });
       }
     };
 
-    // Animation function
+    // RESTORED ORIGINAL ANIMATION with optimizations
     function animate() {
       if (!ctx || !canvas) return;
 
@@ -68,13 +73,13 @@ export default function GridBackground() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Create new particles
-      if (Math.random() < 0.1) createParticle();
+      if (Math.random() < 0.1) createParticle(); // Original frequency
 
       // Update and draw particles
       particles.forEach((particle, index) => {
         particle.x += particle.speedX;
         particle.y += particle.speedY;
-        particle.life -= 0.003;
+        particle.life -= 0.003; // Original fade rate
 
         if (particle.life <= 0) {
           particles.splice(index, 1);
@@ -87,7 +92,7 @@ export default function GridBackground() {
         ctx.fill();
       });
 
-      // Draw grid
+      // RESTORED ORIGINAL GRID ANIMATION
       const rows = Math.ceil(canvas.height / GRID_SIZE);
       const cols = Math.ceil(canvas.width / GRID_SIZE);
 
@@ -160,15 +165,20 @@ export default function GridBackground() {
         }
       }
 
-      time += 0.005;
-      requestAnimationFrame(animate);
+      time += 0.005; // Original time increment
+      animationRef.current = requestAnimationFrame(animate);
     }
 
     animate();
 
+    // Cleanup
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      clearTimeout(mouseTimeout);
     };
   }, []);
 
@@ -181,7 +191,8 @@ export default function GridBackground() {
         style={{ 
           background: 'transparent',
           opacity: 0.6,
-          mixBlendMode: 'screen'
+          mixBlendMode: 'screen',
+          willChange: 'transform', // Performance hint
         }}
       />
     </div>

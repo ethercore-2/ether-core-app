@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -21,7 +19,6 @@ body {
     rgb(var(--background-start-rgb)),
     rgb(var(--background-end-rgb))
   );
-  font-family: 'Nunito', sans-serif;
 }
 
 @layer utilities {
@@ -221,13 +218,11 @@ body {
 }
 
 h1, h2 {
-  font-family: 'Exo 2', sans-serif;
   font-weight: bold;
   font-style: italic;
   text-transform: uppercase;
 }
 
 h3, h4 {
-  font-family: 'Exo 2', sans-serif;
   font-weight: 600;
 }

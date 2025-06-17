@@ -3,7 +3,17 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { X, MessageCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import ReCAPTCHA from 'react-google-recaptcha';
+import dynamic from 'next/dynamic';
+
+// Dynamically import reCAPTCHA only when needed
+const ReCAPTCHA = dynamic(() => import('react-google-recaptcha'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-16 bg-[#0d2231]/30 rounded-lg animate-pulse flex items-center justify-center">
+      <span className="text-gray-400 text-xs">Loading verification...</span>
+    </div>
+  )
+});
 
 // EtherCore services - fetched dynamically but with fallbacks
 const defaultServices = [

@@ -140,44 +140,45 @@ export default async function Home() {
 
         {/* Services */}
         <section className="w-full py-12 sm:py-16 md:py-20 px-4 bg-[#0d1424] relative overflow-hidden">
-          <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-6xl mx-auto">
+          <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-7xl mx-auto">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 md:mb-16 
               bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent">
               AFFORDABLE DIGITAL SOLUTIONS
             </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 max-w-6xl mx-auto">
               {services.map((service) => {
                 const IconComponent = serviceIcons[service.name as keyof typeof serviceIcons];
                 return (
                   <div 
                     key={service.id}
-                    className="p-4 sm:p-6 bg-[#0d1424]/80 rounded-xl hover:bg-[#0d1424] 
-                      transition-all duration-300 border border-teal-500/20"
+                    className="relative w-full p-8 bg-[#0d1424]/80 rounded-xl hover:bg-[#0d1424] 
+                      transition-all duration-300 border border-teal-500/20 hover:border-teal-500/40
+                      hover:shadow-2xl hover:shadow-teal-500/20 hover:scale-105 text-center"
                   >
                     {/* Background Effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-teal-600/0 via-teal-600/5 to-blue-600/0 
-                      opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+                      opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
                     
                     {/* Icon Container */}
-                    <div className="relative mb-6 inline-block">
+                    <div className="relative mb-6 flex justify-center">
                       <div className="absolute inset-0 bg-teal-500/20 rounded-full blur-xl 
                         hover:bg-teal-500/30 transition-all duration-500"></div>
-                      <div className="relative w-12 h-12 flex items-center justify-center 
+                      <div className="relative w-16 h-16 flex items-center justify-center 
                         bg-gradient-to-br from-teal-500 to-blue-500 rounded-full
-                        hover:scale-110 transition-transform duration-500">
+                        hover:scale-110 transition-transform duration-500 mx-auto">
                         {IconComponent && (
-                          <IconComponent className="w-6 h-6 text-white" />
+                          <IconComponent className="w-8 h-8 text-white" />
                         )}
                       </div>
                     </div>
 
                     {/* Content */}
-                    <div className="relative">
+                    <div className="relative text-center">
                       <h3 className="text-xl font-bold mb-4 text-white hover:text-teal-400 
                         transition-colors duration-300">
                         {service.name}
                       </h3>
-                      <p className="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                      <p className="text-gray-400 hover:text-gray-300 transition-colors duration-300 mb-6">
                         {service.description}
                       </p>
                       {/* Features */}
@@ -217,33 +218,33 @@ export default async function Home() {
         </section>
 
         {/* Pricing Section */}
-        <section className="py-12 px-4 relative overflow-hidden">
+        <section className="py-16 px-4 relative overflow-hidden">
           {/* Background Effect */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 to-blue-500/10 opacity-30" />
             <GridBackground />
           </div>
           
-          <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="max-w-5xl mx-auto text-center relative z-10">
             {/* Price Tag */}
-            <div className="inline-block mb-4 relative group">
+            <div className="inline-block mb-6 relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-teal-500/20 to-blue-500/20 rounded-full blur-xl opacity-70" />
-              <div className="relative px-6 py-2 bg-[#0d2231]/50 backdrop-blur-sm rounded-full border border-teal-500/20">
-                <span className="text-2xl font-bold bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent">
+              <div className="relative px-8 py-3 bg-[#0d2231]/50 backdrop-blur-sm rounded-full border border-teal-500/20">
+                <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent">
                   £300 Fixed Price
                 </span>
               </div>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold mb-3 text-white">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
               Complete Website Package
             </h2>
-            <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-400 text-lg mb-10 max-w-3xl mx-auto">
               Everything you need to establish a strong online presence
             </p>
 
-            {/* Features Grid */}
-            <div className="grid md:grid-cols-3 gap-4 mb-8">
+            {/* Features Grid - 2 rows x 3 columns */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 max-w-4xl mx-auto">
               {[
                 { icon: '🎨', title: 'Custom Design', desc: 'Unique, modern design' },
                 { icon: '📱', title: 'Responsive', desc: 'Works on all devices' },
@@ -254,13 +255,14 @@ export default async function Home() {
               ].map((feature, index) => (
                 <div 
                   key={index}
-                  className="flex items-start p-3 rounded-xl bg-[#0d2231]/50 backdrop-blur-sm
-                    border border-teal-500/10 hover:border-teal-500/30 transition-all duration-300"
+                  className="flex flex-col items-center p-6 rounded-xl bg-[#0d2231]/50 backdrop-blur-sm
+                    border border-teal-500/10 hover:border-teal-500/30 transition-all duration-300
+                    hover:scale-105 hover:shadow-lg hover:shadow-teal-500/20 text-center"
                 >
-                  <span className="text-xl mr-3">{feature.icon}</span>
-                  <div className="text-left">
-                    <h3 className="font-semibold text-teal-300 text-sm">{feature.title}</h3>
-                    <p className="text-gray-400 text-xs">{feature.desc}</p>
+                  <span className="text-3xl mb-3">{feature.icon}</span>
+                  <div className="text-center">
+                    <h3 className="font-semibold text-teal-300 text-base mb-2">{feature.title}</h3>
+                    <p className="text-gray-400 text-sm">{feature.desc}</p>
                   </div>
                 </div>
               ))}
@@ -305,34 +307,37 @@ export default async function Home() {
 
         {/* Featured Projects */}
         <section className="py-20 px-4 bg-[#0d1424]">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 bg-gradient-to-r 
               from-teal-300 to-blue-400 bg-clip-text text-transparent">
               FEATURED PROJECTS
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
               {portfolio.map((project) => (
                 <div 
                   key={project.id} 
-                  className="group relative rounded-xl overflow-hidden bg-[#0d2231] hover:bg-[#1a2438] 
+                  className="group relative w-full max-w-sm rounded-xl overflow-hidden bg-[#0d2231] hover:bg-[#1a2438] 
                     transition-all duration-500 hover:shadow-2xl hover:shadow-teal-500/10
-                    border border-teal-500/5 hover:border-teal-500/20"
+                    border border-teal-500/5 hover:border-teal-500/20 h-full flex flex-col"
                 >
                   {/* Hover Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0f1a]/80 to-[#0a0f1a] 
                     opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
                   
-                  {/* Image Container */}
-                  <div className="relative h-48 overflow-hidden">
+                  {/* Image Container - Fixed aspect ratio to prevent layout shift */}
+                  <div className="relative w-full h-48 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d2231] to-transparent z-10" />
                     <Image
                       src={project.image_url}
                       alt={project.image_alt || `${project.title} - ${project.client_name || 'EtherCore Project'}`}
                       title={project.image_title || `${project.title} - ${project.client_name || 'EtherCore Project'}`}
-                      fill
-                      className="object-cover transform group-hover:scale-110 transition-transform duration-700"
+                      width={384} // Explicit width for layout shift prevention
+                      height={192} // Explicit height for layout shift prevention
+                      className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-700"
+                      priority={portfolio.indexOf(project) < 2} // Priority for first 2 images
                       quality={85}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      loading={portfolio.indexOf(project) < 2 ? "eager" : "lazy"}
                     />
                     
                     {/* Floating Tag */}
@@ -347,7 +352,7 @@ export default async function Home() {
                   </div>
 
                   {/* Content */}
-                  <div className="relative p-6 z-20 text-center">
+                  <div className="relative p-6 z-20 text-center flex-1 flex flex-col justify-between">
                     {/* Animated Line */}
                     <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-teal-500/50 to-transparent 
                       transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
@@ -396,19 +401,19 @@ export default async function Home() {
 
         {/* Testimonials Section */}
         <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 bg-gradient-to-r 
               from-teal-300 to-blue-400 bg-clip-text text-transparent">
               CLIENT TESTIMONIALS
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
               {testimonials.map((testimonial) => (
                 <div 
                   key={testimonial.id} 
-                  className="group relative p-6 rounded-xl bg-gradient-to-br from-[#0d2231]/80 to-[#1a2438]/80 
+                  className="group relative w-full max-w-80 p-8 rounded-xl bg-gradient-to-br from-[#0d2231]/80 to-[#1a2438]/80 
                     backdrop-blur-sm hover:from-teal-600/10 hover:to-blue-600/10 
-                    transition-all duration-500 hover:shadow-2xl hover:shadow-teal-500/10
-                    border border-teal-500/5 hover:border-teal-500/20"
+                    transition-all duration-500 hover:shadow-2xl hover:shadow-teal-500/20
+                    border border-teal-500/5 hover:border-teal-500/20 hover:scale-105 text-center"
                 >
                   {/* Quote Icon */}
                   <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-40 transition-opacity">
@@ -418,7 +423,7 @@ export default async function Home() {
                   </div>
 
                   {/* Rating Stars */}
-                  <div className="flex items-center mb-4 relative">
+                  <div className="flex items-center justify-center mb-4 relative">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <svg
                         key={i}
@@ -433,19 +438,19 @@ export default async function Home() {
                   </div>
 
                   {/* Testimonial Text */}
-                  <p className="text-gray-300 italic mb-6 relative z-10 group-hover:text-gray-200 transition-colors">
+                  <p className="text-gray-300 italic mb-6 relative z-10 group-hover:text-gray-200 transition-colors text-center">
                     &quot;{testimonial.testimonial}&quot;
                   </p>
 
                   {/* Client Name */}
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 
+                  <div className="flex flex-col items-center">
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 
                       flex items-center justify-center text-white font-semibold text-lg
-                      group-hover:scale-110 transition-transform duration-300">
+                      group-hover:scale-110 transition-transform duration-300 mb-3">
                       {testimonial.client_name.charAt(0)}
                     </div>
-                    <p className="ml-3 font-semibold bg-gradient-to-r from-teal-400 to-blue-400 
-                      bg-clip-text text-transparent group-hover:from-teal-300 group-hover:to-blue-300">
+                    <p className="font-semibold bg-gradient-to-r from-teal-400 to-blue-400 
+                      bg-clip-text text-transparent group-hover:from-teal-300 group-hover:to-blue-300 text-center">
                       {testimonial.client_name}
                     </p>
                   </div>
@@ -472,16 +477,19 @@ export default async function Home() {
                   className="w-full group relative bg-[#0d1424]/80 rounded-xl overflow-hidden 
                     border border-teal-500/20 hover:border-teal-500/40 transition-all duration-300"
                 >
-                  {/* Image Container */}
-                  <div className="relative h-48 sm:h-56">
+                  {/* Image Container - Fixed aspect ratio */}
+                  <div className="relative w-full h-48 sm:h-56">
                     <Image
                       src={blog.image_url}
                       alt={blog.image_alt || blog.title}
                       title={blog.image_title || blog.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      quality={85}
+                      width={400} // Explicit width for layout shift prevention
+                      height={224} // Explicit height for layout shift prevention  
+                      className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                      priority={blogs.indexOf(blog) === 0} // Priority for first blog only
+                      quality={75} // Reduced quality for blog images
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      loading={blogs.indexOf(blog) === 0 ? "eager" : "lazy"}
                     />
                   </div>
 

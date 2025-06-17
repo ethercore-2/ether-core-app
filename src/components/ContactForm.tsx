@@ -2,8 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { Send } from 'lucide-react';
-import ReCAPTCHA from 'react-google-recaptcha';
+import dynamic from 'next/dynamic';
 import { supabase } from '@/lib/supabase';
+
+// Dynamically import reCAPTCHA only when needed
+const ReCAPTCHA = dynamic(() => import('react-google-recaptcha'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-20 bg-[#0d2231]/30 rounded-lg animate-pulse flex items-center justify-center">
+      <span className="text-gray-400 text-sm">Loading security verification...</span>
+    </div>
+  )
+});
 
 interface Service {
   id: string;
@@ -23,6 +33,7 @@ export default function ContactForm() {
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [isLoadingServices, setIsLoadingServices] = useState(true);
+  const [showCaptcha, setShowCaptcha] = useState(false);
 
   // Fetch services on component mount
   useEffect(() => {
@@ -45,6 +56,13 @@ export default function ContactForm() {
 
     fetchServices();
   }, []);
+
+  // Show captcha only when form starts being filled
+  useEffect(() => {
+    if (formData.name || formData.email || formData.message) {
+      setShowCaptcha(true);
+    }
+  }, [formData.name, formData.email, formData.message]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,6 +95,7 @@ export default function ContactForm() {
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: 'General/Other Enquiries', message: '' });
       setCaptchaValue(null);
+      setShowCaptcha(false);
     } catch {
       setSubmitStatus('error');
     } finally {
@@ -191,34 +210,38 @@ export default function ContactForm() {
         />
       </div>
 
-      {/* reCAPTCHA */}
-      <ReCAPTCHA
-        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-        onChange={(value: string | null) => setCaptchaValue(value)}
-      />
+      {/* reCAPTCHA - Only load when needed */}
+      {showCaptcha && (
+        <div className="transition-all duration-300">
+          <ReCAPTCHA
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+            onChange={(value: string | null) => setCaptchaValue(value)}
+          />
+        </div>
+      )}
 
       {/* Centered Submit Button */}
       <div className="flex justify-center">
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || (!showCaptcha && !!(formData.name || formData.email || formData.message))}
           className="relative inline-flex items-center px-8 py-4 bg-[#0a0f1a] rounded-xl
-            text-lg font-semibold overflow-hidden button-shine group/btn"
+            text-lg font-semibold overflow-hidden button-shine group/btn disabled:opacity-50"
         >
           <span className="bg-gradient-to-r from-teal-300 to-blue-400 bg-clip-text text-transparent 
             group-hover:from-white group-hover:to-white transition-all duration-300">
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </span>
-          <Send className="w-5 h-5 text-teal-400 group-hover:text-white" />
+          <Send className="w-5 h-5 text-teal-400 group-hover:text-white ml-2" />
         </button>
       </div>
 
       {/* Status Messages */}
       {submitStatus === 'success' && (
-        <div className="text-green-400 mt-4">Message sent successfully!</div>
+        <div className="text-green-400 mt-4 text-center">Message sent successfully!</div>
       )}
       {submitStatus === 'error' && (
-        <div className="text-red-400 mt-4">Failed to send message. Please try again.</div>
+        <div className="text-red-400 mt-4 text-center">Failed to send message. Please try again.</div>
       )}
     </form>
   );

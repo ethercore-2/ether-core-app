@@ -79,50 +79,50 @@ const Footer = async () => {
 
   return (
     <footer className="bg-[#0a0f1a] text-white">
-      {/* Main Footer - 4 Column Layout */}
-      <div className="bg-[#0d1424] py-16">
+      {/* Main Footer - Centered 4 Column Layout */}
+      <div className="bg-[#0d1424] py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="flex flex-wrap justify-center gap-12 lg:gap-16">
             
             {/* Column 1: About Us */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3 mb-6">
+            <div className="w-full sm:w-auto sm:min-w-64 text-center sm:text-left">
+              <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3 mb-8 justify-center sm:justify-start">
                 {companyInfo?.logo_figure && (
                   <Image
                     src={companyInfo.logo_figure}
                     alt={`${companyInfo.company_name} Logo`}
-                    width={40}
-                    height={40}
+                    width={50}
+                    height={50}
                     className="object-contain"
                   />
                 )}
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-2xl font-bold text-white">
                   {companyInfo?.company_name || 'EtherCore'}
                 </h3>
               </div>
-              <h4 className="text-lg font-semibold text-teal-300 mb-3">
+              <h4 className="text-xl font-semibold text-teal-300 mb-4">
                 About Us
               </h4>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-gray-400 leading-relaxed max-w-sm mx-auto sm:mx-0">
                 {companyInfo?.description || 
                  'EtherCore offers professional digital solutions and web development services.'}
               </p>
-              <div className="pt-4">
-                <SocialMediaLinks size={32} />
+              <div className="pt-6 flex justify-center sm:justify-start">
+                <SocialMediaLinks size={40} />
               </div>
             </div>
 
             {/* Column 2: Quick Links */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-teal-300 mb-6">
+            <div className="w-full sm:w-auto text-center sm:text-left">
+              <h4 className="text-xl font-semibold text-teal-300 mb-6">
                 Quick Links
               </h4>
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {quickLinks.map((link, index) => (
                   <li key={index}>
                     <Link 
                       href={link.href}
-                      className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm"
+                      className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-base hover:scale-105 inline-block"
                     >
                       {link.name}
                     </Link>
@@ -132,16 +132,16 @@ const Footer = async () => {
             </div>
 
             {/* Column 3: Services */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-teal-300 mb-6">
+            <div className="w-full sm:w-auto text-center sm:text-left">
+              <h4 className="text-xl font-semibold text-teal-300 mb-6">
                 Services
               </h4>
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {footerServices.map((service, index) => (
                   <li key={index}>
                     <Link 
                       href={service.href}
-                      className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm"
+                      className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-base hover:scale-105 inline-block"
                     >
                       {service.name}
                     </Link>
@@ -151,25 +151,27 @@ const Footer = async () => {
             </div>
 
             {/* Column 4: Contact */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-teal-300 mb-6">
+            <div className="w-full sm:w-auto text-center sm:text-left">
+              <h4 className="text-xl font-semibold text-teal-300 mb-6">
                 Contact
               </h4>
-              <ul className="space-y-4">
+              <ul className="space-y-5">
                 {contactLinks.map((contact, index) => (
-                  <li key={index} className="flex items-start space-x-3">
-                    {getContactIcon(contact.type)}
-                    <div className="flex-1">
+                  <li key={index} className="flex items-start space-x-3 justify-center sm:justify-start">
+                    <div className="flex-shrink-0 mt-1">
+                      {getContactIcon(contact.type)}
+                    </div>
+                    <div className="flex-1 text-center sm:text-left">
                       {contact.href ? (
                         <a
                           href={contact.href}
-                          className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm"
+                          className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-base hover:scale-105 inline-block"
                           {...(contact.type === 'whatsapp' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                         >
                           {contact.value}
                         </a>
                       ) : (
-                        <span className="text-gray-400 text-sm">
+                        <span className="text-gray-400 text-base">
                           {contact.value}
                         </span>
                       )}
@@ -182,34 +184,36 @@ const Footer = async () => {
         </div>
       </div>
 
-      {/* Sub-Footer - Original Layout */}
-      <div className="bg-[#0d2231] py-8">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-          {/* Left Side: Branding & Socials */}
-          <div className="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-6">
-            <div>
-              <h2 className="text-lg font-bold">Ether Core</h2>
-              <p className="text-sm">© {new Date().getFullYear()} Ether Core. All rights reserved.</p>
+      {/* Sub-Footer - Centered Layout */}
+      <div className="bg-[#0d2231] py-10">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-col items-center text-center space-y-6">
+            {/* Branding Section */}
+            <div className="flex flex-col items-center space-y-3">
+              <h2 className="text-2xl font-bold text-white">Ether Core</h2>
+              <p className="text-gray-400">© {new Date().getFullYear()} Ether Core. All rights reserved.</p>
             </div>
 
-            {/* Social Media Icons INLINE with Branding */}
-            <SocialMediaLinks size={60} />
-          </div>
+            {/* Social Media Icons */}
+            <div className="flex justify-center">
+              <SocialMediaLinks size={60} />
+            </div>
 
-          {/* Right Side: Links */}
-          <div className="flex space-x-6">
-            <Link href="/privacy" className="text-teal-400 hover:underline">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-teal-400 hover:underline">
-              Terms of Service
-            </Link>
-            <Link href="/cookies" className="text-teal-400 hover:underline">
-              Cookie Policy
-            </Link>
-            <Link href="/contact" className="text-teal-400 hover:underline">
-              Contact Us
-            </Link>
+            {/* Legal Links */}
+            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+              <Link href="/privacy" className="text-teal-400 hover:text-teal-300 transition-colors hover:scale-105 inline-block font-medium">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-teal-400 hover:text-teal-300 transition-colors hover:scale-105 inline-block font-medium">
+                Terms of Service
+              </Link>
+              <Link href="/cookies" className="text-teal-400 hover:text-teal-300 transition-colors hover:scale-105 inline-block font-medium">
+                Cookie Policy
+              </Link>
+              <Link href="/contact" className="text-teal-400 hover:text-teal-300 transition-colors hover:scale-105 inline-block font-medium">
+                Contact Us
+              </Link>
+            </div>
           </div>
         </div>
       </div>
