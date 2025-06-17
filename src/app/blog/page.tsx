@@ -1,0 +1,70 @@
+import { Metadata } from "next";
+import { supabase } from "@/lib/supabase";
+import { getHeroSection } from "@/lib/hero-utils";
+import { getCompanyInfo } from "@/lib/company-utils";
+import { getSeoMetadata, generateMetadata as generateSeoMetadata } from "@/lib/seo-utils";
+import { generatePageSchema } from "@/lib/schema-utils";
+import BlogClient from "@/components/BlogClient";
+
+// ✅ Dynamic SEO metadata from database
+export async function generateMetadata(): Promise<Metadata> {
+  const seoData = await getSeoMetadata('/blog');
+  return generateSeoMetadata(seoData, {
+    title: "Blog - Insights & Updates",
+    description: "Read the latest articles and industry trends from the EtherCore team.",
+    keywords: "blog, insights, updates, technology, web development, AI automation",
+    openGraph: {
+      title: "Blog - Insights & Updates",
+      description: "Read the latest articles and industry trends from the EtherCore team.",
+      url: "https://ether-core.com/blog",
+      siteName: "EtherCore",
+      images: [
+        {
+          url: "https://ejoimfdulvukutxdznem.supabase.co/storage/v1/object/public/logo_ether/logo_name2.png",
+          width: 800,
+          height: 600,
+          alt: "EtherCore Blog"
+        }
+      ]
+    }
+  });
+}
+
+// ✅ Fetch Data (Runs on the Server)
+async function getData() {
+  const [{ data: blogs }, hero, companyInfo] = await Promise.all([
+    supabase.from("blogs").select("*").order("published_at", { ascending: false }),
+    getHeroSection('/blog'),
+    getCompanyInfo()
+  ]);
+
+  return { blogs: blogs || [], hero, companyInfo };
+}
+
+// ✅ Server Component (Passes Data to BlogClient)
+export default async function BlogPage() {
+  const { blogs, hero, companyInfo } = await getData();
+  
+  // Generate schema markup for blog page
+  const schemas = generatePageSchema('blog', {
+    companyInfo,
+    hero,
+    blogs
+  });
+  
+  return (
+    <>
+      {/* Schema Markup */}
+      {schemas.map((schema, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(schema, null, 0)
+          }}
+        />
+      ))}
+      <BlogClient blogs={blogs} hero={hero} />
+    </>
+  );
+}

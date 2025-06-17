@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Important pages
+Allow: /services
+Allow: /projects
+Allow: /blog
+Allow: /contact
+
+# Sitemap location
+Sitemap: https://ether-core.com/sitemap.xml
+
+# Crawl delay (optional - 1 second)
+Crawl-delay: 1 
