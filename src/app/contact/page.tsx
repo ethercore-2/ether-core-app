@@ -21,9 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "EtherCore",
       images: [
         {
-          url: "https://ejoimfdulvukutxdznem.supabase.co/storage/v1/object/public/logo_ether/logo_name2.png",
-          width: 800,
-          height: 600,
+          url: "https://www.ether-core.com/android-chrome-512x512.png",
+          width: 512,
+          height: 512,
           alt: "EtherCore Contact Page",
         },
       ],
