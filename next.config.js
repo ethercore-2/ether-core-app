@@ -8,7 +8,8 @@ const nextConfig = {
     domains: [
       'ejoimfdulvukutxdznem.supabase.co',
       'images.unsplash.com', // if you're using Unsplash images
-      'via.placeholder.com'  // if you're using placeholder images
+      'via.placeholder.com',  // if you're using placeholder images
+      'blog-ether.b-cdn.net' // Bunny CDN for blog images
     ],
     remotePatterns: [
       {
@@ -16,6 +17,12 @@ const nextConfig = {
         hostname: 'ejoimfdulvukutxdznem.supabase.co',
         port: '',
         pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'blog-ether.b-cdn.net',
+        port: '',
+        pathname: '/**',
       },
     ],
   }
