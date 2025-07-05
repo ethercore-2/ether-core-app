@@ -25,7 +25,6 @@ export const metadata: Metadata = {
   title: "EtherCore - Affordable Digital Solutions",
   description: "Your Trusted Partner for Affordable Digital Solutions. We specialize in web development, AI automation, and SEO optimization.",
   keywords: "web development, AI automation, digital solutions, SEO optimization, blog, services, projects",
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
   alternates: {
     canonical: "https://ether-core.com"
@@ -53,19 +52,27 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest'
 };
 
+// ✅ Separate viewport export as required by Next.js 15
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <head>
-        {/* ✅ Performance optimizations */}
+        {/* ✅ Enhanced preconnect for better performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://ejoimfdulvukutxdznem.supabase.co" />
+        <link rel="preconnect" href="https://blog-ether.b-cdn.net" />
         <link rel="dns-prefetch" href="https://www.google.com" />
         <link rel="dns-prefetch" href="https://www.gstatic.com" />
         
-        {/* ✅ Critical CSS for above-the-fold content */}
+        {/* ✅ Critical CSS with performance optimizations */}
         <style dangerouslySetInnerHTML={{
           __html: `
             body { 
@@ -73,6 +80,7 @@ export default function RootLayout({
               color: rgb(255, 255, 255);
               margin: 0;
               padding: 0;
+              font-display: swap;
             }
             .animate-fade-in { 
               animation: fadeIn 0.6s ease-out; 
@@ -87,6 +95,14 @@ export default function RootLayout({
             @keyframes fadeInUp { 
               from { opacity: 0; transform: translateY(20px); } 
               to { opacity: 1; transform: translateY(0); } 
+            }
+            /* Performance improvements */
+            * {
+              -webkit-transform: translateZ(0);
+              -moz-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              -o-transform: translateZ(0);
+              transform: translateZ(0);
             }
           `
         }} />
@@ -122,18 +138,18 @@ export default function RootLayout({
         <PopupContact />
         <WhatsappButton variant="fixed" />
         
-        {/* Service Worker Registration */}
+        {/* ✅ Optimized Service Worker Registration */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
+              if ('serviceWorker' in navigator && 'requestIdleCallback' in window) {
+                requestIdleCallback(() => {
                   navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
+                    .then((registration) => {
                       console.log('SW registered: ', registration);
                     })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
+                    .catch((error) => {
+                      console.log('SW registration failed: ', error);
                     });
                 });
               }

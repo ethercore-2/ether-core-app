@@ -50,6 +50,8 @@ const Navigation = ({ ctaText = "Free Consultation" }: NavigationProps) => {
               width={300}
               height={100}
               className="object-contain"
+              priority
+              fetchPriority="high"
             />
           </Link>
 

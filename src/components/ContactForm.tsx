@@ -69,7 +69,9 @@ export default function ContactForm() {
     if (!formData.subject) {
       setFormData({ ...formData, subject: 'General/Other Enquiries' });
     }
-    if (!captchaValue) {
+    
+    // Only require captcha if reCAPTCHA is configured
+    if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaValue) {
       alert('Please complete the reCAPTCHA.');
       return;
     }
@@ -210,13 +212,22 @@ export default function ContactForm() {
         />
       </div>
 
-      {/* reCAPTCHA - Only load when needed */}
-      {showCaptcha && (
+      {/* reCAPTCHA - Only load when needed and sitekey is available */}
+      {showCaptcha && process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
         <div className="transition-all duration-300">
           <ReCAPTCHA
-            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
             onChange={(value: string | null) => setCaptchaValue(value)}
           />
+        </div>
+      )}
+      
+      {/* Development notice when reCAPTCHA is not configured */}
+      {showCaptcha && !process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+        <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+          <p className="text-yellow-400 text-sm">
+            ⚠️ reCAPTCHA not configured for development. Form will work without verification.
+          </p>
         </div>
       )}
 

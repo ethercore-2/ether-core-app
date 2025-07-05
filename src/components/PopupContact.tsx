@@ -149,8 +149,8 @@ const PopupContact = () => {
     setSubmitStatus({ type: null, message: '' });
     
     try {
-      // Verify reCAPTCHA first
-      if (!captchaValue) {
+      // Verify reCAPTCHA first (only if configured)
+      if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaValue) {
         throw new Error('Please complete the reCAPTCHA verification.');
       }
 
@@ -332,19 +332,27 @@ const PopupContact = () => {
               </label>
             </div>
 
-            {/* reCAPTCHA */}
-            <div className="flex justify-center">
-              <ReCAPTCHA
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-                onChange={(value: string | null) => setCaptchaValue(value)}
-                theme="dark"
-                size="compact"
-              />
-            </div>
+            {/* reCAPTCHA - Only show if configured */}
+            {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? (
+              <div className="flex justify-center">
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  onChange={(value: string | null) => setCaptchaValue(value)}
+                  theme="dark"
+                  size="compact"
+                />
+              </div>
+            ) : (
+              <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                <p className="text-yellow-400 text-xs text-center">
+                  ⚠️ reCAPTCHA not configured for development
+                </p>
+              </div>
+            )}
             
             <button 
               type="submit"
-              disabled={isSubmitting || !formData.gdpr || !captchaValue}
+              disabled={isSubmitting || !formData.gdpr || (!!process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaValue)}
               className="w-full py-2 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg font-semibold hover:from-teal-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
             >
               {isSubmitting ? 'Sending...' : 'Send Message'}

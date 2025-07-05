@@ -5,15 +5,26 @@ import { getHeroSectionWithRevalidation } from '@/lib/hero-utils';
 import { getCompanyInfoWithRevalidation } from '@/lib/company-utils';
 import { getSeoMetadataWithRevalidation, generateMetadata as generateSeoMetadata } from '@/lib/seo-utils';
 import { generatePageSchema } from '@/lib/schema-utils';
-import TechStack from '@/components/TechStack';
-import GridBackground from '@/components/GridBackground';
+import dynamic from 'next/dynamic';
 import { 
   Brain, 
   Code2, 
   Search, 
   Palette,
 } from 'lucide-react';
-import ContactForm from '@/components/ContactForm';
+
+// ✅ Dynamic imports for performance optimization
+const TechStack = dynamic(() => import('@/components/TechStack'), {
+  loading: () => <div className="h-32 bg-gray-800/50 animate-pulse rounded-lg" />,
+});
+
+const GridBackground = dynamic(() => import('@/components/GridBackground'), {
+  loading: () => <div className="h-32 bg-gray-800/50 animate-pulse rounded-lg" />,
+});
+
+const ContactForm = dynamic(() => import('@/components/ContactForm'), {
+  loading: () => <div className="h-64 bg-gray-800/50 animate-pulse rounded-lg" />,
+});
 import { Metadata } from "next";
 
 // ✅ Dynamic SEO metadata from database
@@ -26,32 +37,56 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-// Fetch function
+// ✅ Enhanced fetch function with error handling and retry logic
 async function getData() {
-  const [
-    { data: services },
-    { data: testimonials },
-    { data: portfolio },
-    { data: blogs },
-    hero,
-    companyInfo
-  ] = await Promise.all([
-    supabase.from('services').select('*').order('created_at', { ascending: true }),
-    supabase.from('testimonials').select('*').order('created_at', { ascending: false }),
-    supabase.from('portfolio').select('*').order('created_at', { ascending: false }),
-    supabase.from('blogs').select('*').order('published_at', { ascending: false }).limit(3),
-    getHeroSectionWithRevalidation('/'),
-    getCompanyInfoWithRevalidation()
-  ]);
-
-  return {
-    services: services || [],
-    testimonials: testimonials || [],
-    portfolio: portfolio || [],
-    blogs: blogs || [],
-    hero: hero,
-    companyInfo: companyInfo
+  const fetchWithRetry = async (fn: () => Promise<any>, retries = 2) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (error) {
+        if (i === retries - 1) throw error;
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+      }
+    }
   };
+
+  try {
+    const [
+      { data: services },
+      { data: testimonials },
+      { data: portfolio },
+      { data: blogs },
+      hero,
+      companyInfo
+    ] = await Promise.all([
+      supabase.from('services').select('*').order('created_at', { ascending: true }),
+      supabase.from('testimonials').select('*').order('created_at', { ascending: false }),
+      supabase.from('portfolio').select('*').order('created_at', { ascending: false }),
+      supabase.from('blogs').select('*').order('published_at', { ascending: false }).limit(3),
+      getHeroSectionWithRevalidation('/'),
+      getCompanyInfoWithRevalidation()
+    ]);
+
+    return {
+      services: services || [],
+      testimonials: testimonials || [],
+      portfolio: portfolio || [],
+      blogs: blogs || [],
+      hero: hero,
+      companyInfo: companyInfo
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    // Return default values in case of failure
+    return {
+      services: [],
+      testimonials: [],
+      portfolio: [],
+      blogs: [],
+      hero: null,
+      companyInfo: null
+    };
+  }
 }
 
 const serviceIcons = {
@@ -331,13 +366,16 @@ export default async function Home() {
                       src={project.image_url}
                       alt={project.image_alt || `${project.title} - ${project.client_name || 'EtherCore Project'}`}
                       title={project.image_title || `${project.title} - ${project.client_name || 'EtherCore Project'}`}
-                      width={384} // Explicit width for layout shift prevention
-                      height={192} // Explicit height for layout shift prevention
+                      width={384}
+                      height={192}
                       className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-700"
-                      priority={portfolio.indexOf(project) < 2} // Priority for first 2 images
-                      quality={85}
+                      priority={portfolio.indexOf(project) < 2}
+                      quality={80}
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       loading={portfolio.indexOf(project) < 2 ? "eager" : "lazy"}
+                      fetchPriority={portfolio.indexOf(project) === 0 ? "high" : "auto"}
                     />
                     
                     {/* Floating Tag */}
@@ -483,13 +521,14 @@ export default async function Home() {
                       src={blog.image_url}
                       alt={blog.image_alt || blog.title}
                       title={blog.image_title || blog.title}
-                      width={400} // Explicit width for layout shift prevention
-                      height={224} // Explicit height for layout shift prevention  
+                      width={384}
+                      height={216}
                       className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-                      priority={blogs.indexOf(blog) === 0} // Priority for first blog only
-                      quality={75} // Reduced quality for blog images
+                      priority={blogs.indexOf(blog) === 0}
+                      quality={80}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       loading={blogs.indexOf(blog) === 0 ? "eager" : "lazy"}
+                      fetchPriority={blogs.indexOf(blog) === 0 ? "high" : "auto"}
                     />
                   </div>
 

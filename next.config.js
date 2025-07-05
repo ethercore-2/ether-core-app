@@ -2,22 +2,18 @@
 const nextConfig = {
   env: {
     NEXT_PUBLIC_SUPABASE_URL: 'https://ejoimfdulvukutxdznem.supabase.co',
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqb2ltZmR1bHZ1a3V0eGR6bmVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgwNjU3MjQsImV4cCI6MjA1MzY0MTcyNH0.U0VitAvsr4cMws-AjdcnCweo7EFp241CtVTq1j5Q-2g'
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqb2ltZmR1bHZ1a3V0eGR6bmVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgwNjU3MjQsImV4cCI6MjA1MzY0MTcyNH0.U0VitAvsr4cMws-AjdcnCweo7EFp241CtVTq1j5Q-2g',
+    // reCAPTCHA keys will be loaded from environment variables
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
   },
   images: {
-    // Enhanced image optimization settings
-    formats: ['image/webp', 'image/avif'], // Modern formats for better compression
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // More breakpoints
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Thumbnail sizes
-    minimumCacheTTL: 60, // Cache optimized images for 60 seconds
-    dangerouslyAllowSVG: true, // Allow SVG optimization (if needed)
-    contentDispositionType: 'attachment', // Security for SVGs
-    domains: [
-      'ejoimfdulvukutxdznem.supabase.co',
-      'images.unsplash.com', // if you're using Unsplash images
-      'via.placeholder.com',  // if you're using placeholder images
-      'blog-ether.b-cdn.net' // Bunny CDN for blog images
-    ],
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
     remotePatterns: [
       {
         protocol: 'https',
@@ -31,8 +27,64 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
-  }
+  },
+  compress: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
+  webpack: (config, { dev, isServer }) => {
+    if (!dev && !isServer) {
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
+      
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            priority: -10,
+            chunks: 'all',
+          },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            priority: -5,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      };
+    }
+    
+    return config;
+  },
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig
