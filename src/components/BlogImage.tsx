@@ -26,8 +26,8 @@ const BlogImage = ({
   
   return (
     <figure className={`my-8 ${className}`}>
-      {/* Image Container with Auto-Thumbnails via Next.js */}
-      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-900/50">
+      {/* Image Container */}
+      <div className="relative w-full rounded-xl overflow-hidden bg-gray-900/50"> {/* Removed aspect-video */}
         {isSVG ? (
           // SVG Handling - Use regular img tag for better SVG support
           <img
@@ -49,9 +49,10 @@ const BlogImage = ({
             src={src}
             alt={alt || "Blog Image"}
             title={title || alt}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 800px, 1200px"
-            className="object-cover"
+            width={width || 1200} // Provide width, fallback if not available
+            height={height || 675} // Provide height, fallback if not available
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 800px, 1200px" // This might need tuning based on actual layout
+            className="object-cover w-full h-auto rounded-xl" // w-full and h-auto for responsiveness with aspect ratio
             quality={85}
             priority={false}
             placeholder="blur"

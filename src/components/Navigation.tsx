@@ -89,6 +89,8 @@ const Navigation = ({ ctaText = "Free Consultation" }: NavigationProps) => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMobileMenuOpen}
               className="relative group p-2 rounded-lg border border-teal-500/20 
                 hover:border-teal-500/40 transition-colors duration-300"
             >

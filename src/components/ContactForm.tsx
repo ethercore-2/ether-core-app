@@ -110,11 +110,13 @@ export default function ContactForm() {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Name Input */}
         <div className="relative group">
+          <label htmlFor="contact-name" className="sr-only">Your Name</label>
           <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500/20 to-blue-500/20 
             rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 
             group-hover:duration-200" />
           <input
             type="text"
+            id="contact-name"
             name="name"
             required
             value={formData.name}
@@ -130,11 +132,13 @@ export default function ContactForm() {
 
         {/* Email Input */}
         <div className="relative group">
+          <label htmlFor="contact-email" className="sr-only">Your Email</label>
           <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500/20 to-blue-500/20 
             rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 
             group-hover:duration-200" />
           <input
             type="email"
+            id="contact-email"
             name="email"
             required
             value={formData.email}
@@ -150,54 +154,59 @@ export default function ContactForm() {
       </div>
 
       {/* Subject Dropdown */}
-      <div className="relative group">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500/20 to-blue-500/20 
-          rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 
-          group-hover:duration-200" />
-        <select
-          name="subject"
-          required
-          value={formData.subject}
-          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-          disabled={isLoadingServices}
-          className="relative w-full px-4 py-3 bg-[#0d2231]/50 rounded-lg 
-            border border-teal-500/20 focus:border-teal-500/50
-            text-gray-300 placeholder-gray-500
-            focus:outline-none focus:ring-2 focus:ring-teal-500/20
-            backdrop-blur-sm transition-all duration-300 disabled:opacity-50"
-        >
-          <option value="General/Other Enquiries" className="text-gray-300 bg-[#0d2231]">
-            General/Other Enquiries
-          </option>
-          {services.length > 0 ? (
-            services.map((service) => (
-              <option 
-                key={service.id} 
-                value={service.name} 
-                className="text-gray-300 bg-[#0d2231]"
-              >
-                {service.name}
-              </option>
-            ))
-          ) : (
-            // Fallback options if services don't load
-            <>
-              <option value="Web Development" className="text-gray-300 bg-[#0d2231]">Web Development</option>
-              <option value="AI Automation" className="text-gray-300 bg-[#0d2231]">AI Automation</option>
-              <option value="SEO Optimization" className="text-gray-300 bg-[#0d2231]">SEO Optimization</option>
-              <option value="UX/UI Design" className="text-gray-300 bg-[#0d2231]">UX/UI Design</option>
-              <option value="App Development" className="text-gray-300 bg-[#0d2231]">App Development</option>
-            </>
-          )}
-        </select>
+      <div>
+        <label htmlFor="contact-subject" className="block text-sm font-medium text-gray-300 mb-1">Subject</label>
+        <div className="relative group">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500/20 to-blue-500/20
+            rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000
+            group-hover:duration-200" />
+          <select
+            id="contact-subject"
+            name="subject"
+            required
+            value={formData.subject}
+            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+            disabled={isLoadingServices}
+            className="relative w-full px-4 py-3 bg-[#0d2231]/50 rounded-lg
+              border border-teal-500/20 focus:border-teal-500/50
+              text-gray-300 placeholder-gray-500
+              focus:outline-none focus:ring-2 focus:ring-teal-500/20
+              backdrop-blur-sm transition-all duration-300 disabled:opacity-50"
+          >
+            <option value="General/Other Enquiries" className="text-gray-300 bg-[#0d2231]">
+              General/Other Enquiries
+            </option>
+            {services.length > 0 ? (
+              services.map((service) => (
+                <option
+                  key={service.id}
+                  value={service.name}
+                  className="text-gray-300 bg-[#0d2231]"
+                >
+                  {service.name}
+                </option>
+              ))
+            ) : (
+              <>
+                <option value="Web Development" className="text-gray-300 bg-[#0d2231]">Web Development</option>
+                <option value="AI Automation" className="text-gray-300 bg-[#0d2231]">AI Automation</option>
+                <option value="SEO Optimization" className="text-gray-300 bg-[#0d2231]">SEO Optimization</option>
+                <option value="UX/UI Design" className="text-gray-300 bg-[#0d2231]">UX/UI Design</option>
+                <option value="App Development" className="text-gray-300 bg-[#0d2231]">App Development</option>
+              </>
+            )}
+          </select>
+        </div>
       </div>
 
       {/* Message Input */}
       <div className="relative group">
+        <label htmlFor="contact-message" className="sr-only">Your Message</label>
         <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500/20 to-blue-500/20 
           rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 
           group-hover:duration-200" />
         <textarea
+          id="contact-message"
           name="message"
           required
           value={formData.message}

@@ -181,6 +181,8 @@ export default async function Page({
                     alt={alt || blog.image_alt || "Blog Image"}
                     title={blog.image_title}
                     caption={blog.image_caption}
+                    width={blog.image_width}
+                    height={blog.image_height}
                   />;
                 },
                 div: ({ ...props }) => <div {...props} />,

@@ -30,6 +30,7 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({ size = 24 }) => {
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
+           aria-label={`Visit our ${link.name} page`}
           className="hover:opacity-80 transition-opacity"
         >
           {link.icon(size)}

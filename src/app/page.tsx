@@ -6,6 +6,8 @@ import { getCompanyInfoWithRevalidation } from '@/lib/company-utils';
 import { getSeoMetadataWithRevalidation, generateMetadata as generateSeoMetadata } from '@/lib/seo-utils';
 import { generatePageSchema } from '@/lib/schema-utils';
 import dynamic from 'next/dynamic';
+import { Metadata } from "next";
+import PageClientComponents from '@/components/PageClientComponents'; // Import the new client component
 import { 
   Brain, 
   Code2, 
@@ -17,15 +19,6 @@ import {
 const TechStack = dynamic(() => import('@/components/TechStack'), {
   loading: () => <div className="h-32 bg-gray-800/50 animate-pulse rounded-lg" />,
 });
-
-const GridBackground = dynamic(() => import('@/components/GridBackground'), {
-  loading: () => <div className="h-32 bg-gray-800/50 animate-pulse rounded-lg" />,
-});
-
-const ContactForm = dynamic(() => import('@/components/ContactForm'), {
-  loading: () => <div className="h-64 bg-gray-800/50 animate-pulse rounded-lg" />,
-});
-import { Metadata } from "next";
 
 // ✅ Dynamic SEO metadata from database
 export async function generateMetadata(): Promise<Metadata> {
@@ -39,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // ✅ Enhanced fetch function with error handling and retry logic
 async function getData() {
-  const fetchWithRetry = async (fn: () => Promise<any>, retries = 2) => {
+  const fetchWithRetry = async <T,>(fn: () => Promise<T>, retries = 2): Promise<T> => {
     for (let i = 0; i < retries; i++) {
       try {
         return await fn();
@@ -48,30 +41,31 @@ async function getData() {
         await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
       }
     }
+    throw new Error("Fetch with retry failed after all retries"); // Should not be reached if retries > 0
   };
 
   try {
     const [
-      { data: services },
-      { data: testimonials },
-      { data: portfolio },
-      { data: blogs },
+      servicesResponse,
+      testimonialsResponse,
+      portfolioResponse,
+      blogsResponse,
       hero,
       companyInfo
     ] = await Promise.all([
-      supabase.from('services').select('*').order('created_at', { ascending: true }),
-      supabase.from('testimonials').select('*').order('created_at', { ascending: false }),
-      supabase.from('portfolio').select('*').order('created_at', { ascending: false }),
-      supabase.from('blogs').select('*').order('published_at', { ascending: false }).limit(3),
-      getHeroSectionWithRevalidation('/'),
-      getCompanyInfoWithRevalidation()
+      fetchWithRetry(async () => await supabase.from('services').select('*').order('created_at', { ascending: true })),
+      fetchWithRetry(async () => await supabase.from('testimonials').select('*').order('created_at', { ascending: false })),
+      fetchWithRetry(async () => await supabase.from('portfolio').select('*').order('created_at', { ascending: false })),
+      fetchWithRetry(async () => await supabase.from('blogs').select('*').order('published_at', { ascending: false }).limit(3)),
+      getHeroSectionWithRevalidation('/'), // Assuming this has its own retry or is less critical for this specific retry logic
+      getCompanyInfoWithRevalidation() // Assuming this has its own retry
     ]);
 
     return {
-      services: services || [],
-      testimonials: testimonials || [],
-      portfolio: portfolio || [],
-      blogs: blogs || [],
+      services: servicesResponse.data || [],
+      testimonials: testimonialsResponse.data || [],
+      portfolio: portfolioResponse.data || [],
+      blogs: blogsResponse.data || [],
       hero: hero,
       companyInfo: companyInfo
     };
@@ -124,7 +118,7 @@ export default async function Home() {
       <main className="min-h-screen w-screen max-w-[100vw] overflow-x-hidden">
         {/* Hero Section */}
         <section className="min-h-screen relative flex flex-col justify-center items-center p-4 md:p-8 w-full">
-          <GridBackground />
+          <PageClientComponents componentType="GridBackground" />
           
           {/* Hero Content */}
           <div className="relative z-20 w-full max-w-[95%] sm:max-w-[90%] md:max-w-6xl mx-auto text-center">
@@ -257,7 +251,7 @@ export default async function Home() {
           {/* Background Effect */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 to-blue-500/10 opacity-30" />
-            <GridBackground />
+            <PageClientComponents componentType="GridBackground" />
           </div>
           
           <div className="max-w-5xl mx-auto text-center relative z-10">
@@ -556,7 +550,7 @@ export default async function Home() {
           {/* Background Effect */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 to-blue-500/10 opacity-30" />
-            <GridBackground />
+            <PageClientComponents componentType="GridBackground" />
           </div>
 
           <div className="max-w-6xl mx-auto relative z-10">
@@ -571,7 +565,7 @@ export default async function Home() {
             </div>
 
             <div className="max-w-3xl mx-auto">
-              <ContactForm />
+              <PageClientComponents componentType="ContactForm" />
             </div>
           </div>
         </section>
