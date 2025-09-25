@@ -1,0 +1,32 @@
+User-agent: *
+Allow: /
+
+# Allow all main pages
+Allow: /services
+Allow: /projects
+Allow: /blog
+Allow: /campaign-seo
+Allow: /campaign-web
+Allow: /campaign-automation
+
+# Disallow admin and private areas
+Disallow: /admin
+Disallow: /api
+Disallow: /_next
+Disallow: /private
+
+# Allow important assets
+Allow: /favicon.ico
+Allow: /sitemap.xml
+Allow: /android-chrome-512x512.png
+Allow: /apple-touch-icon.png
+
+# Crawl-delay for aggressive bots
+User-agent: Bingbot
+Crawl-delay: 1
+
+User-agent: Slurp
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://ether-core.com/sitemap.xml 

@@ -1,0 +1,78 @@
+[02:19:55.708] Running build in Washington, D.C., USA (East) – iad1
+[02:19:55.709] Build machine configuration: 2 cores, 8 GB
+[02:19:55.736] Cloning github.com/EtherCore-Corporation/ETHERCOREAPP (Branch: main, Commit: 8e311e5)
+[02:19:56.207] Cloning completed: 471.000ms
+[02:20:01.735] Restored build cache from previous deployment (H9yuSZ7BdtqxTaqB2vWPF6ZpThYA)
+[02:20:02.262] Running "vercel build"
+[02:20:02.725] Vercel CLI 44.2.13
+[02:20:03.066] Running "install" command: `npm install`...
+[02:20:13.291] 
+[02:20:13.292] added 1 package, changed 21 packages, and audited 499 packages in 10s
+[02:20:13.293] 
+[02:20:13.293] 213 packages are looking for funding
+[02:20:13.294]   run `npm fund` for details
+[02:20:13.294] 
+[02:20:13.294] found 0 vulnerabilities
+[02:20:13.329] Detected Next.js version: 15.3.5
+[02:20:13.330] Running "npm run build"
+[02:20:13.454] 
+[02:20:13.455] > business-website@0.1.0 build
+[02:20:13.455] > next build
+[02:20:13.455] 
+[02:20:14.132]  ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` as Turbopack is now stable.
+[02:20:14.197]    ▲ Next.js 15.3.5
+[02:20:14.198] 
+[02:20:14.265]    Creating an optimized production build ...
+[02:20:33.008]  ✓ Compiled successfully in 18.0s
+[02:20:33.014]    Linting and checking validity of types ...
+[02:20:40.535] 
+[02:20:40.536] Failed to compile.
+[02:20:40.536] 
+[02:20:40.536] ./src/app/campaign-seo/page.tsx
+[02:20:40.536] 242:9  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.536] 246:48  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.536] 251:54  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.536] 256:54  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.536] 
+[02:20:40.536] ./src/app/campaign-web/page.tsx
+[02:20:40.536] 11:10  Error: 'ExternalLink' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.536] 11:34  Error: 'Phone' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.536] 11:41  Error: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.536] 28:7  Error: 'GridBackground' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.536] 32:11  Error: 'CampaignVideo' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.536] 274:54  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.536] 
+[02:20:40.537] ./src/app/layout.tsx
+[02:20:40.537] 3:8  Error: 'NavigationWrapper' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.537] 
+[02:20:40.537] ./src/app/page.tsx
+[02:20:40.537] 16:3  Error: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.537] 18:3  Error: 'Play' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.537] 19:3  Error: 'Pause' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.537] 20:3  Error: 'Volume2' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.537] 21:3  Error: 'VolumeX' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.537] 22:3  Error: 'Check' is defined but never used.  @typescript-eslint/no-unused-vars
+[02:20:40.537] 
+[02:20:40.537] ./src/components/AboutDevs.tsx
+[02:20:40.538] 145:57  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+[02:20:40.538] 
+[02:20:40.538] ./src/components/BlogImage.tsx
+[02:20:40.538] 33:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+[02:20:40.538] 
+[02:20:40.538] ./src/components/PopupContact.tsx
+[02:20:40.538] 30:5  Error: 'timeoutId' is never reassigned. Use 'const' instead.  prefer-const
+[02:20:40.538] 228:54  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+[02:20:40.538] 
+[02:20:40.539] ./src/components/WhatsappButton.tsx
+[02:20:40.539] 45:6  Warning: React Hook useEffect has a missing dependency: 'variant'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+[02:20:40.539] 
+[02:20:40.539] ./src/lib/campaign-utils.ts
+[02:20:40.539] 53:87  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.539] 89:61  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.539] 151:67  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.539] 204:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+[02:20:40.539] 
+[02:20:40.549] info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+[02:20:40.634] Error: Command "npm run build" exited with 1
+[02:20:41.461] 
+[02:20:44.910] Exiting build container

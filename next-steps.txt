@@ -1,0 +1,536 @@
+# NEXT STEPS - CAMPAIGN PAGES EXPANSION
+
+## 🎯 OVERVIEW
+Clone the existing campaign-web page to create two additional campaign pages:
+- SEO Campaign Page
+- Automation Campaign Page
+
+## 📋 STEP 1: CLONE CAMPAIGN WEB PAGE
+
+### 1.1 Create SEO Campaign Page
+```bash
+# Copy the campaign-web page
+cp src/app/campaign-web/page.tsx src/app/campaign-seo/page.tsx
+
+# Update the page metadata and content for SEO focus
+# Change page_slug from 'campaign-web' to 'campaign-seo'
+# Update metadata titles and descriptions for SEO services
+```
+
+### 1.2 Create Automation Campaign Page
+```bash
+# Copy the campaign-web page
+cp src/app/campaign-web/page.tsx src/app/campaign-automation/page.tsx
+
+# Update the page metadata and content for Automation focus
+# Change page_slug from 'campaign-web' to 'campaign-automation'
+# Update metadata titles and descriptions for AI Automation services
+```
+
+### 1.3 Update Page-Specific Content
+For each new page, modify:
+- `generateMetadata()` function with specific titles/descriptions
+- `getData()` function to fetch correct campaign video data
+- Page-specific schema markup
+- Service filtering for relevant services only
+
+## 📋 STEP 2: CLONE CAMPAIGN COMPONENT & CREATE UTILS
+
+### 2.1 Create SEO Campaign Component
+```bash
+# Copy the CampaignWeb component
+cp src/components/CampaignWeb.tsx src/components/CampaignSEO.tsx
+
+# Rename the component and update props interface
+# Update default fallback data for SEO focus
+```
+
+### 2.2 Create Automation Campaign Component
+```bash
+# Copy the CampaignWeb component
+cp src/components/CampaignWeb.tsx src/components/CampaignAutomation.tsx
+
+# Rename the component and update props interface
+# Update default fallback data for Automation focus
+```
+
+### 2.3 Create SEO Promo Utils
+```bash
+# Copy the promo-utils.ts file
+cp src/lib/promo-utils.ts src/lib/promo-seo-utils.ts
+
+# Update to fetch from promo_seo table
+# Update interface name to PromoSEO
+# Update function names: getSeoPromoData(), getSeoPromoWithRevalidation()
+```
+
+### 2.4 Create Automation Promo Utils
+```bash
+# Copy the promo-utils.ts file
+cp src/lib/promo-utils.ts src/lib/promo-automation-utils.ts
+
+# Update to fetch from promo_automation table
+# Update interface name to PromoAutomation
+# Update function names: getAutomationPromoData(), getAutomationPromoWithRevalidation()
+```
+
+### 2.5 Create SEO Promo Section Component
+```bash
+# Copy the WebPromoSection component
+cp src/components/WebPromoSection.tsx src/components/SeoPromoSection.tsx
+
+# Update to use PromoSEO interface and green color scheme
+# Update fallback data for SEO services
+```
+
+### 2.6 Create Automation Promo Section Component
+```bash
+# Copy the WebPromoSection component
+cp src/components/WebPromoSection.tsx src/components/AutomationPromoSection.tsx
+
+# Update to use PromoAutomation interface and purple color scheme
+# Update fallback data for Automation services
+```
+
+### 2.7 Component Updates Required
+For each new component:
+- Rename the main component function
+- Update the interface name (CampaignSEOProps, CampaignAutomationProps)
+- Update default data with service-specific content
+- Update export statement
+- Update imports to use correct utils files
+
+## 📋 STEP 3: POSTGRESQL SCRIPT FOR NEW TABLES
+
+### 3.1 Create Database Migration Script
+```sql
+-- File: database_campaign_expansion_setup.sql
+
+-- =====================================================
+-- CAMPAIGN PAGES EXPANSION - DATABASE SETUP
+-- =====================================================
+
+-- 1. Add new page slugs to existing campaign_videos table
+INSERT INTO campaign_videos (
+    page_slug,
+    video_url,
+    header_text,
+    subtitle_text,
+    cta_button_text,
+    cta_button_url,
+    autoplay,
+    muted,
+    loop_video,
+    video_type,
+    priority,
+    meta_title,
+    meta_description,
+    video_keywords,
+    is_active,
+    created_at,
+    updated_at
+) VALUES 
+-- SEO Campaign Video
+(
+    'campaign-seo',
+    'https://example.com/seo-campaign-video.mp4',
+    'Dominate Search Rankings with EtherCore SEO',
+    'Professional SEO Optimization & Digital Marketing - Boost Your Online Visibility',
+    'Get Your Free SEO Audit',
+    'https://calendly.com/ethercore/seo-audit',
+    false,
+    true,
+    false,
+    'seo_promotional',
+    1,
+    'SEO Services - Boost Your Search Rankings | EtherCore',
+    'Professional SEO optimization services to improve your search rankings and drive organic traffic. Get your free SEO audit today.',
+    'SEO optimization, search engine optimization, digital marketing, organic traffic, search rankings, SEO audit',
+    true,
+    NOW(),
+    NOW()
+),
+-- Automation Campaign Video
+(
+    'campaign-automation',
+    'https://example.com/automation-campaign-video.mp4',
+    'Automate Your Business with AI-Powered Solutions',
+    'Custom AI Automation & Workflow Optimization - Transform Your Operations',
+    'Schedule Automation Consultation',
+    'https://calendly.com/ethercore/automation-consultation',
+    false,
+    true,
+    false,
+    'automation_promotional',
+    1,
+    'AI Automation Services - Streamline Your Business | EtherCore',
+    'Custom AI automation solutions to streamline your business processes and increase efficiency. Schedule your free consultation.',
+    'AI automation, business automation, workflow optimization, artificial intelligence, process automation',
+    true,
+    NOW(),
+    NOW()
+);
+
+-- 2. Create promo_seo table (following promo_web structure)
+CREATE TABLE IF NOT EXISTS promo_seo (
+    id BIGSERIAL PRIMARY KEY,
+    
+    -- Basic Information
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    subtitle TEXT,
+    price_amount DECIMAL(10,2) NOT NULL,
+    price_currency VARCHAR(10) DEFAULT 'GBP',
+    price_label VARCHAR(100) DEFAULT 'Starting From',
+    
+    -- CTA Information
+    cta_button_text VARCHAR(100) NOT NULL,
+    cta_button_url TEXT NOT NULL,
+    additional_info TEXT,
+    
+    -- Feature Cards (JSON array for flexibility)
+    features JSONB NOT NULL DEFAULT '[]',
+    
+    -- Display Settings
+    is_active BOOLEAN DEFAULT true,
+    display_order INTEGER DEFAULT 1,
+    
+    -- Background and Styling (Green theme for SEO)
+    background_gradient VARCHAR(255) DEFAULT 'from-green-500/10 to-emerald-500/10',
+    price_tag_gradient VARCHAR(255) DEFAULT 'from-green-300 to-emerald-400',
+    
+    -- SEO Fields
+    meta_title VARCHAR(255),
+    meta_description TEXT,
+    schema_data JSONB,
+    
+    -- Timestamps
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100)
+);
+
+-- Insert SEO promo data
+INSERT INTO promo_seo (
+    slug,
+    title,
+    subtitle,
+    price_amount,
+    price_currency,
+    price_label,
+    cta_button_text,
+    cta_button_url,
+    additional_info,
+    features,
+    meta_title,
+    meta_description,
+    schema_data,
+    created_by
+) VALUES (
+    'seo-audit-package',
+    'Complete SEO Audit & Strategy',
+    'Comprehensive SEO analysis and optimization roadmap',
+    299.00,
+    'GBP',
+    'Starting From',
+    'Get Your Free SEO Audit',
+    'https://calendly.com/ethercore/seo-audit',
+    '* Includes detailed report, keyword strategy, and 1-hour consultation call.',
+    '[
+        {
+            "icon": "🔍",
+            "title": "Technical SEO Audit",
+            "description": "Complete website analysis",
+            "order": 1
+        },
+        {
+            "icon": "📊",
+            "title": "Keyword Research",
+            "description": "Target audience analysis",
+            "order": 2
+        },
+        {
+            "icon": "📈",
+            "title": "Competitor Analysis",
+            "description": "Market positioning insights",
+            "order": 3
+        },
+        {
+            "icon": "🎯",
+            "title": "Content Strategy",
+            "description": "SEO-optimized content plan",
+            "order": 4
+        },
+        {
+            "icon": "🔗",
+            "title": "Link Building",
+            "description": "Authority building strategy",
+            "order": 5
+        },
+        {
+            "icon": "📱",
+            "title": "Local SEO",
+            "description": "Google My Business optimization",
+            "order": 6
+        }
+    ]'::jsonb,
+    'SEO Audit & Strategy - Boost Your Rankings | EtherCore',
+    'Professional SEO audit and strategy package. Get comprehensive analysis, keyword research, and optimization roadmap to dominate search rankings.',
+    '{
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Complete SEO Audit & Strategy",
+        "description": "Comprehensive SEO analysis and optimization roadmap",
+        "brand": {
+            "@type": "Brand",
+            "name": "EtherCore"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "299",
+            "priceCurrency": "GBP",
+            "availability": "https://schema.org/InStock"
+        },
+        "category": "SEO Services"
+    }'::jsonb,
+    'system'
+);
+
+-- 3. Create promo_automation table (following promo_web structure)
+CREATE TABLE IF NOT EXISTS promo_automation (
+    id BIGSERIAL PRIMARY KEY,
+    
+    -- Basic Information
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    subtitle TEXT,
+    price_amount DECIMAL(10,2) NOT NULL,
+    price_currency VARCHAR(10) DEFAULT 'GBP',
+    price_label VARCHAR(100) DEFAULT 'Starting From',
+    
+    -- CTA Information
+    cta_button_text VARCHAR(100) NOT NULL,
+    cta_button_url TEXT NOT NULL,
+    additional_info TEXT,
+    
+    -- Feature Cards (JSON array for flexibility)
+    features JSONB NOT NULL DEFAULT '[]',
+    
+    -- Display Settings
+    is_active BOOLEAN DEFAULT true,
+    display_order INTEGER DEFAULT 1,
+    
+    -- Background and Styling (Purple theme for Automation)
+    background_gradient VARCHAR(255) DEFAULT 'from-purple-500/10 to-violet-500/10',
+    price_tag_gradient VARCHAR(255) DEFAULT 'from-purple-300 to-violet-400',
+    
+    -- SEO Fields
+    meta_title VARCHAR(255),
+    meta_description TEXT,
+    schema_data JSONB,
+    
+    -- Timestamps
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100)
+);
+
+-- Insert Automation promo data
+INSERT INTO promo_automation (
+    slug,
+    title,
+    subtitle,
+    price_amount,
+    price_currency,
+    price_label,
+    cta_button_text,
+    cta_button_url,
+    additional_info,
+    features,
+    meta_title,
+    meta_description,
+    schema_data,
+    created_by
+) VALUES (
+    'ai-automation-package',
+    'AI Business Automation Suite',
+    'Custom AI solutions to streamline your operations',
+    799.00,
+    'GBP',
+    'Starting From',
+    'Schedule Automation Consultation',
+    'https://calendly.com/ethercore/automation-consultation',
+    '* Custom pricing based on complexity. Includes implementation and training.',
+    '[
+        {
+            "icon": "🤖",
+            "title": "AI Chatbots",
+            "description": "24/7 customer support automation",
+            "order": 1
+        },
+        {
+            "icon": "📧",
+            "title": "Email Automation",
+            "description": "Smart email marketing workflows",
+            "order": 2
+        },
+        {
+            "icon": "📊",
+            "title": "Data Processing",
+            "description": "Automated data analysis & reporting",
+            "order": 3
+        },
+        {
+            "icon": "🔄",
+            "title": "Workflow Automation",
+            "description": "Custom business process automation",
+            "order": 4
+        },
+        {
+            "icon": "🎯",
+            "title": "Lead Generation",
+            "description": "AI-powered lead qualification",
+            "order": 5
+        },
+        {
+            "icon": "📱",
+            "title": "API Integration",
+            "description": "Connect all your business tools",
+            "order": 6
+        }
+    ]'::jsonb,
+    'AI Business Automation Suite - Streamline Operations | EtherCore',
+    'Custom AI automation solutions to streamline your business processes. Chatbots, workflow automation, data processing, and more.',
+    '{
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "AI Business Automation Suite",
+        "description": "Custom AI solutions to streamline your operations",
+        "brand": {
+            "@type": "Brand",
+            "name": "EtherCore"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "799",
+            "priceCurrency": "GBP",
+            "availability": "https://schema.org/InStock"
+        },
+        "category": "AI Automation Services"
+    }'::jsonb,
+    'system'
+);
+
+-- Create indexes for better performance
+CREATE INDEX idx_promo_seo_slug ON promo_seo(slug);
+CREATE INDEX idx_promo_seo_active ON promo_seo(is_active);
+CREATE INDEX idx_promo_automation_slug ON promo_automation(slug);
+CREATE INDEX idx_promo_automation_active ON promo_automation(is_active);
+```
+
+### 3.2 Run the Migration
+```bash
+# Execute the SQL script
+psql -h your_host -U your_user -d your_database -f database_campaign_expansion_setup.sql
+```
+
+## 📋 STEP 4: UPDATE ROUTING AND NAVIGATION
+
+### 4.1 Add Routes to Next.js
+The new pages will be automatically available at:
+- `/campaign-seo`
+- `/campaign-automation`
+
+### 4.2 Update Navigation (if needed)
+Add links to the new campaign pages in:
+- `src/components/Navigation.tsx`
+- `src/components/Footer.tsx`
+
+## 📋 STEP 5: CONTENT CUSTOMIZATION
+
+### 5.1 SEO Campaign Page Customization
+- **Hero Section**: Uses `campaign_videos` table with `page_slug = 'campaign-seo'`
+- **Promo Section**: Uses `promo_seo` table with SEO-focused features
+- **Color Scheme**: Green theme (#059669, #10b981)
+- **Features**: SEO audit, keyword research, competitor analysis, content strategy, link building, local SEO
+- **Pricing**: £299 starting price for SEO audit package
+
+### 5.2 Automation Campaign Page Customization
+- **Hero Section**: Uses `campaign_videos` table with `page_slug = 'campaign-automation'`
+- **Promo Section**: Uses `promo_automation` table with automation-focused features
+- **Color Scheme**: Purple theme (#7c3aed, #a855f7)
+- **Features**: AI chatbots, email automation, data processing, workflow automation, lead generation, API integration
+- **Pricing**: £799 starting price for AI automation suite
+
+### 5.3 Data Flow Pattern
+Each campaign page follows this pattern:
+1. **Video Hero**: `campaign_videos` table → `CampaignSEO/CampaignAutomation` component
+2. **Promo Section**: `promo_seo/promo_automation` table → `SeoPromoSection/AutomationPromoSection` component
+3. **Utils**: Separate utils files for each service type (`promo-seo-utils.ts`, `promo-automation-utils.ts`)
+
+## 📋 STEP 6: TESTING AND DEPLOYMENT
+
+### 6.1 Local Testing
+```bash
+# Start development server
+npm run dev
+
+# Test each campaign page
+# http://localhost:3002/campaign-web
+# http://localhost:3002/campaign-seo
+# http://localhost:3002/campaign-automation
+```
+
+### 6.2 SEO Testing
+- Test meta tags and Open Graph data
+- Validate schema markup with Google's Rich Results Test
+- Check mobile responsiveness on all pages
+
+### 6.3 Analytics Setup
+- Implement tracking for each campaign page
+- Set up conversion tracking for different CTAs
+- Monitor performance metrics
+
+## 📋 STEP 7: FUTURE ENHANCEMENTS
+
+### 7.1 A/B Testing
+- Test different video content for each campaign
+- Test different CTA buttons and messaging
+- Test different color schemes and layouts
+
+### 7.2 Personalization
+- Dynamic content based on referrer
+- Personalized CTAs based on user behavior
+- Industry-specific messaging
+
+### 7.3 Advanced Analytics
+- Heat mapping for user interactions
+- Video engagement tracking
+- Conversion funnel analysis
+
+## ✅ COMPLETION CHECKLIST
+
+- [ ] Campaign-SEO page created and customized
+- [ ] Campaign-Automation page created and customized
+- [ ] CampaignSEO component created and functional
+- [ ] CampaignAutomation component created and functional
+- [ ] Database tables created and populated
+- [ ] All pages tested on mobile and desktop
+- [ ] SEO metadata validated
+- [ ] Analytics tracking implemented
+- [ ] Performance optimization completed
+
+## 📞 SUPPORT
+
+For any issues during implementation:
+1. Check the existing campaign-web implementation as reference
+2. Ensure database connections are properly configured
+3. Test each component individually before integration
+4. Validate all environment variables are set correctly
+
+---
+**Created:** $(date)
+**Last Updated:** $(date)
+**Version:** 1.0 
